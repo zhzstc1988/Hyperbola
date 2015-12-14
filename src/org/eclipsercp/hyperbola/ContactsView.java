@@ -27,7 +27,7 @@ public class ContactsView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		initializeSession();
-		treeViewer = new TreeViewer(parent);//, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+		treeViewer = new TreeViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		Platform.getAdapterManager().registerAdapters(adapterFactory, Contact.class);
 		getSite().setSelectionProvider(treeViewer);
 		treeViewer.setLabelProvider(new WorkbenchLabelProvider());
