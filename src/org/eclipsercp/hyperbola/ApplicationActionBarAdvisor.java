@@ -30,10 +30,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	MenuManager hyperbolaMenu = new MenuManager(
     			"&Hyperbola", "hyperbola");
     	hyperbolaMenu.add(exitAction);
-    	hyperbolaMenu.add(new GroupMarker("other-actions"));
+    	//hyperbolaMenu.add(new GroupMarker("other-actions"));
+    	//hyperbolaMenu.appendToGroup("other-actions", aboutAction);
     	MenuManager helpMenu = new MenuManager(
     			"&Help", "help");
     	helpMenu.add(aboutAction);
+    	//hyperbolaMenu.add(helpMenu);
     	menuBar.add(hyperbolaMenu);
     	menuBar.add(helpMenu);
     }

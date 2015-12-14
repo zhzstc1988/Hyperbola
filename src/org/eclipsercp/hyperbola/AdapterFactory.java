@@ -62,7 +62,7 @@ public class AdapterFactory implements IAdapterFactory {
 		@Override
 		public String getLabel(Object o) {
 			ContactsEntry entry = ((ContactsEntry)o);
-			return entry.getName() + '-' + entry.getServer();
+			return entry.getNickname() + " (" + entry.getName() + '@' + entry.getServer() + ")";
 		}
 
 		@Override
