@@ -34,7 +34,7 @@ public class ChatEditorInput implements IEditorInput {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return null;
+		return participant;
 	}
 
 	@Override

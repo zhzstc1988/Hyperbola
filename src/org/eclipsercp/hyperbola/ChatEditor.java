@@ -43,10 +43,6 @@ public class ChatEditor extends EditorPart {
 		setPartName(getUser());
 	}
 
-	private String getUser() {
-		return (getEditorInput()).getName();
-	}
-
 	@Override
 	public boolean isDirty() {
 		// TODO Auto-generated method stub
@@ -89,12 +85,10 @@ public class ChatEditor extends EditorPart {
 				// TODO Auto-generated method stub
 				if (e.character == SWT.CR) {
 					sendMessage();
-					
+					e.doit = false;
 				}
 			}
-
 		});
-
 	}
 
 	@Override
@@ -104,8 +98,33 @@ public class ChatEditor extends EditorPart {
 	}
 	
 	private void sendMessage() {
-		// TODO Auto-generated method stub
-		
+		String body = entry.getText();
+		if (body.length() == 0) {
+			return;
+		}
+		transcript.append(renderMessage(getUser(), body));
+		transcript.append("\n");
+		scrollToEnd();
+		entry.setText("");		
+	}
+
+	private void scrollToEnd() {
+		int n = transcript.getCharCount();
+		transcript.setSelection(n, n);
+		transcript.showSelection();
+	}
+
+	private String renderMessage(String from, String body) {
+		if (from == null)
+			return body;
+		int j = from.indexOf('@');
+		if (j > 0)
+			from = from.substring(0, j);
+		return "<" + from + ">  " + body;
+	}
+
+	private String getUser() {
+		return (getEditorInput()).getName();
 	}
 
 }
