@@ -21,6 +21,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private IWorkbenchAction aboutAction;
 	
 	private IWorkbenchAction addContactAction;
+	
+	private IWorkbenchAction chatAction;
 
 	private StatusLineContributionItem statusItem;
 
@@ -28,6 +30,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         super(configurer);
     }
 
+    @Override
     protected void makeActions(IWorkbenchWindow window) {
     	exitAction = ActionFactory.QUIT.create(window);
     	register(exitAction);
@@ -35,12 +38,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	register(aboutAction);
     	addContactAction = new AddContactAction(window);
     	register(addContactAction);
+    	chatAction = new ChatAction(window);
+    	register(chatAction);
     }
 
+    @Override
     protected void fillMenuBar(IMenuManager menuBar) {
     	MenuManager hyperbolaMenu = new MenuManager(
     			"&Hyperbola", "hyperbola");
     	hyperbolaMenu.add(addContactAction);
+    	hyperbolaMenu.add(chatAction);
     	hyperbolaMenu.add(new Separator());
     	hyperbolaMenu.add(exitAction);
     	//hyperbolaMenu.add(new GroupMarker("other-actions"));
@@ -53,17 +60,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	menuBar.add(helpMenu);
     }
     
+    @Override
     protected void fillCoolBar(ICoolBarManager coolBar) {
+    	coolBar.setLockLayout(true);
     	IToolBarManager toolbar = new ToolBarManager(coolBar.getStyle());
     	coolBar.add(toolbar);
     	toolbar.add(addContactAction);
+    	toolbar.add(new Separator());
+    	toolbar.add(chatAction);
     }
-    
-    protected void fillTrayItem(IMenuManager trayItem) {
-		trayItem.add(aboutAction);
-		trayItem.add(exitAction);
-	}
-    
+
     @Override
     protected void fillStatusLine(IStatusLineManager statusLine) {
     	statusItem = new StatusLineContributionItem("LoggedInStatus");

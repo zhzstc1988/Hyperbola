@@ -48,11 +48,13 @@ public class AddContactDialog extends Dialog {
 		super(parentShell);
 	}
 
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Add Contact");
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
@@ -90,6 +92,7 @@ public class AddContactDialog extends Dialog {
 		return composite;
 	}
 
+	@Override
 	protected void okPressed() {
 		nickname = nicknameText.getText();
 		server = serverText.getText();

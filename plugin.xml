@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="RCP Perspective"
+            name="Hyperbola Perspective"
             class="org.eclipsercp.hyperbola.Perspective"
             id="org.eclipsercp.hyperbola.perspective">
       </perspective>
@@ -27,6 +27,16 @@
             id="org.eclipsercp.hyperbola.views.contacts"
             name="Contacts">
       </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipsercp.hyperbola.ChatEditor"
+            default="false"
+            icon="icons/chat.gif"
+            id="org.eclipsercp.hyperbola.editors.chat"
+            name="Chat">
+      </editor>
    </extension>
 
 </plugin>
