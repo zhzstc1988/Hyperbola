@@ -1,23 +1,24 @@
 package org.eclipsercp.hyperbola;
 
+import java.util.Collection;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.model.BaseWorkbenchContentProvider;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipsercp.hyperbola.model.*;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterListener;
 
 public class ContactsView extends ViewPart {
 
 	public static final String ID =
 			"org.eclipsercp.hyperbola.views.contacts";
-	
+
 	private TreeViewer treeViewer;
-	
-	private Session session;
-	
+
 	private AdapterFactory adapterFactory = new AdapterFactory();
 
 	public ContactsView() {
@@ -26,44 +27,51 @@ public class ContactsView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		initializeSession();
 		treeViewer = new TreeViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		Platform.getAdapterManager().registerAdapters(adapterFactory, Contact.class);
 		getSite().setSelectionProvider(treeViewer);
-		treeViewer.setLabelProvider(new WorkbenchLabelProvider());
-		treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
-		treeViewer.setInput(session.getRoot());
-		session.getRoot().addContactsListener(new IContactsListener() {
-			public void contactsChanged(ContactsGroup contacts,
-					ContactsEntry entry) {
+		treeViewer.setLabelProvider(new HyperbolaLabelProvider());
+		treeViewer.setContentProvider(new HyperbolaContentProvider());
+		Roster roster = Session.getInstance().getConnection().getRoster();
+		treeViewer.setInput(roster);
+		if(roster != null) {
+			roster.addRosterListener(new RosterListener() {
+				@Override
+				public void entriesAdded(Collection<String> arg0) {
+					refresh();
+				}
+				@Override
+				public void entriesDeleted(Collection<String> arg0) {
+					refresh();
+				}
+				@Override
+				public void entriesUpdated(Collection<String> arg0) {
+					refresh();
+				}
+				@Override
+				public void presenceChanged(org.jivesoftware.smack.packet.Presence arg0) {
+					refresh();
+				};
+			});
+		}
+	}
+
+	private void refresh() {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
 				treeViewer.refresh();
 			}
 		});
 	}
 
-	@Override
 	public void setFocus() {
 		treeViewer.getControl().setFocus();
 	}
-	
+
 	@Override
 	public void dispose() {
 		Platform.getAdapterManager().unregisterAdapters(adapterFactory);
 		super.dispose();
-	}
-	
-	private void initializeSession() {
-		session = new Session();
-		ContactsGroup root = session.getRoot();
-		ContactsGroup friendsGroup = new ContactsGroup(root, "Friends");
-		root.addEntry(friendsGroup);
-		friendsGroup.addEntry(new ContactsEntry(friendsGroup,
-				"Alize", "aliz", "localhost"));
-		friendsGroup.addEntry(new ContactsEntry(friendsGroup,
-				"Sydney", "syd", "localhost"));
-		ContactsGroup otherGroup = new ContactsGroup(root, "Other");
-		root.addEntry(otherGroup);
-		otherGroup.addEntry(new ContactsEntry(otherGroup, "Nadine", "nad", "localhost"));
 	}
 
 }

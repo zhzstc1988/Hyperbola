@@ -3,6 +3,7 @@ package org.eclipsercp.hyperbola;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.jivesoftware.smack.util.StringUtils;
 
 public class ChatEditorInput implements IEditorInput {
 	
@@ -10,7 +11,7 @@ public class ChatEditorInput implements IEditorInput {
 	
 	public ChatEditorInput(String participant) {
 		super();
-		this.participant = participant;
+		this.participant = StringUtils.parseBareAddress(participant);
 	}
 
 	@Override

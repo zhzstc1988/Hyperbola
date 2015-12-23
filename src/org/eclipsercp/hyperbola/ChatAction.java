@@ -9,7 +9,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipsercp.hyperbola.model.ContactsEntry;
+import org.jivesoftware.smack.RosterEntry;
 
 public class ChatAction extends Action implements ISelectionListener, IWorkbenchAction {
 
@@ -40,7 +40,7 @@ public class ChatAction extends Action implements ISelectionListener, IWorkbench
 			if (iselection instanceof IStructuredSelection) {
 				selection = (IStructuredSelection) iselection;
 				enable = selection.size() == 1 &&
-						selection.getFirstElement() instanceof ContactsEntry;
+						selection.getFirstElement() instanceof RosterEntry;
 			}
 		}
 		setEnabled(enable);
@@ -49,8 +49,8 @@ public class ChatAction extends Action implements ISelectionListener, IWorkbench
 	@Override
 	public void run() {
 		Object item = selection.getFirstElement();
-		ContactsEntry entry = (ContactsEntry) item;
-		ChatEditorInput input = new ChatEditorInput(entry.getName());
+		RosterEntry entry = (RosterEntry) item;
+		ChatEditorInput input = new ChatEditorInput(entry.getUser());
 		try {
 			window.getActivePage().openEditor(input, ChatEditor.ID);
 		} catch (PartInitException e) {

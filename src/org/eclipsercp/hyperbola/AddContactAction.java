@@ -9,8 +9,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipsercp.hyperbola.model.ContactsEntry;
-import org.eclipsercp.hyperbola.model.ContactsGroup;
+import org.eclipsercp.hyperbola.model.Session;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterGroup;
+import org.jivesoftware.smack.XMPPException;
 
 public class AddContactAction extends Action implements ISelectionListener, IWorkbenchAction {
 
@@ -40,7 +42,7 @@ public class AddContactAction extends Action implements ISelectionListener, IWor
 			if (iselection instanceof IStructuredSelection) {
 				selection = (IStructuredSelection) iselection;
 				setEnabled(selection.size() == 1 &&
-						selection.getFirstElement() instanceof ContactsGroup);
+						selection.getFirstElement() instanceof RosterGroup);
 			} else {
 				setEnabled(false);
 			}
@@ -52,11 +54,15 @@ public class AddContactAction extends Action implements ISelectionListener, IWor
 		int code = d.open();
 		if (code == Window.OK) {
 			Object item = selection.getFirstElement();
-			ContactsGroup group = (ContactsGroup) item;
-			ContactsEntry entry =
-					new ContactsEntry(group, d.getUserId(), d.getNickname(),
-							d.getServer());
-			group.addEntry(entry);
+			RosterGroup group = (RosterGroup) item;
+			Roster list = Session.getInstance().getConnection().getRoster();
+			String user = d.getUserId() + "@" + d.getServer();
+			String[] groups = new String[] { group.getName() };
+			try {
+				list.createEntry(user, d.getNickname(), groups);
+			} catch (XMPPException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

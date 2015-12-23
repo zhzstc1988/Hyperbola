@@ -12,12 +12,19 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipsercp.hyperbola.model.Session;
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
 
 public class ChatEditor extends EditorPart {
-	
+
 	public static String ID = "org.eclipsercp.hyperbola.editors.chat";
 	private Text transcript;
 	private Text entry;
+	private Chat chat;
+	private MessageListener messageListener;
 
 	public ChatEditor() {
 		// TODO Auto-generated constructor stub
@@ -40,7 +47,7 @@ public class ChatEditor extends EditorPart {
 		// TODO Auto-generated method stub
 		setSite(site);
 		setInput(input);
-		setPartName(getUser());
+		setPartName(getParticipant());
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class ChatEditor extends EditorPart {
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		top.setLayout(layout);
-		
+
 		transcript = new Text(top, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 		transcript.setLayoutData(new GridData(GridData.FILL, GridData.FILL,
 				true, true));
@@ -72,14 +79,14 @@ public class ChatEditor extends EditorPart {
 				SWT.COLOR_INFO_BACKGROUND));
 		transcript.setForeground(transcript.getDisplay().getSystemColor(
 				SWT.COLOR_INFO_FOREGROUND));
-		
+
 		entry = new Text(top, SWT.BORDER | SWT.WRAP);
 		GridData gridData = new GridData(GridData.FILL, GridData.FILL, true,
 				false);
 		gridData.heightHint = entry.getLineHeight() * 2;
 		entry.setLayoutData(gridData);
 		entry.addKeyListener(new KeyAdapter() {
-			
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
@@ -89,6 +96,15 @@ public class ChatEditor extends EditorPart {
 				}
 			}
 		});
+
+		messageListener = new MessageListener() {
+
+			public void processMessage(Chat chat, Message message) {
+				process(message);
+			}
+		};
+		
+		getChat().addMessageListener(messageListener);
 	}
 
 	@Override
@@ -96,11 +112,32 @@ public class ChatEditor extends EditorPart {
 		// TODO Auto-generated method stub
 
 	}
-	
+
+	@Override
+	public void dispose() {
+		if (chat != null) {
+			if (messageListener != null) {
+				getChat().removeMessageListener(messageListener);
+				messageListener = null;
+			}
+			getSession().terminateChat(chat);
+			chat = null;
+		}
+	}
+
+	private Session getSession() {
+		return Session.getInstance();
+	}
+
 	private void sendMessage() {
 		String body = entry.getText();
 		if (body.length() == 0) {
 			return;
+		}
+		try {
+			chat.sendMessage(body);
+		} catch (XMPPException e) {
+			e.printStackTrace();
 		}
 		transcript.append(renderMessage(getUser(), body));
 		transcript.append("\n");
@@ -124,7 +161,40 @@ public class ChatEditor extends EditorPart {
 	}
 
 	private String getUser() {
-		return (getEditorInput()).getName();
+		return getSession().getConnection().getUser();
+	}
+
+	private String getParticipant() {
+		return ((ChatEditorInput) getEditorInput()).getName();
+	}
+
+	private Chat getChat() {
+		if (chat == null) {
+			chat = getSession().getChat(getParticipant(), true);
+		}
+		return chat;
+	}
+
+	public void processFirstMessage(Message message) {
+		process(message);
+	}
+
+	private void process(Message message) {
+		if (transcript.isDisposed()) 
+			return;
+		transcript.getDisplay().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (transcript.isDisposed())
+					return;
+				transcript.append(renderMessage(message.getFrom(),
+						message.getBody()));
+				transcript.append("\n");
+				scrollToEnd();
+			}
+		});
 	}
 
 }
