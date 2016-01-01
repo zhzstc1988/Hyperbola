@@ -8,7 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipsercp.hyperbola.model.*;
+import org.eclipsercp.hyperbola.model.Session;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterListener;
 
@@ -28,7 +28,6 @@ public class ContactsView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		treeViewer = new TreeViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		Platform.getAdapterManager().registerAdapters(adapterFactory, Contact.class);
 		getSite().setSelectionProvider(treeViewer);
 		treeViewer.setLabelProvider(new HyperbolaLabelProvider());
 		treeViewer.setContentProvider(new HyperbolaContentProvider());

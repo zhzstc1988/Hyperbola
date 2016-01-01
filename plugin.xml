@@ -61,6 +61,22 @@
                type="org.eclipse.ui.model.IWorkbenchAdapter">
          </adapter>
       </factory>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipsercp.hyperbola.application"
+            name="Hyperbola Chat Client">
+         <property
+               name="appName"
+               value="Hyperbola Chat Client">
+         </property>
+         <property
+               name="windowImages"
+               value="icons/alt16.gif,icons/alt32.gif">
+         </property>
+      </product>
    </extension>n>
 
 </plugin>

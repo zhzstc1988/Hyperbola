@@ -17,7 +17,6 @@ package org.eclipsercp.hyperbola.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.jivesoftware.smack.Chat;
@@ -34,7 +33,7 @@ import org.jivesoftware.smack.packet.RosterPacket;
  * Encapsulates the state for a session, including the connection details (user
  * name, password, server) and the connection itself.
  */
-public class Session implements IAdaptable {
+public class Session {
 	
 	public static final String HOSTNAME = "zhz-pc";
 
@@ -62,10 +61,6 @@ public class Session implements IAdaptable {
 
 	public void setConnection(XMPPConnection connection) {
 		this.connection = connection;
-	}
-
-	public <T> T getAdapter(Class<T> adapter) {
-		return null;
 	}
 
 	public ConnectionDetails getConnectionDetails() {
