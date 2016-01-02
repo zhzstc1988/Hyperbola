@@ -15,65 +15,71 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
-	
+
 	private IWorkbenchAction exitAction;
-	
+
 	private IWorkbenchAction aboutAction;
-	
+
 	private IWorkbenchAction addContactAction;
-	
+
 	private IWorkbenchAction chatAction;
 
 	private StatusLineContributionItem statusItem;
 
-    public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
-        super(configurer);
-    }
+	private IWorkbenchAction preferencesAction;
 
-    @Override
-    protected void makeActions(IWorkbenchWindow window) {
-    	exitAction = ActionFactory.QUIT.create(window);
-    	register(exitAction);
-    	aboutAction = ActionFactory.ABOUT.create(window);
-    	register(aboutAction);
-    	addContactAction = new AddContactAction(window);
-    	register(addContactAction);
-    	chatAction = new ChatAction(window);
-    	register(chatAction);
-    }
+	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
+		super(configurer);
+	}
 
-    @Override
-    protected void fillMenuBar(IMenuManager menuBar) {
-    	MenuManager hyperbolaMenu = new MenuManager(
-    			"&Hyperbola", "hyperbola");
-    	hyperbolaMenu.add(addContactAction);
-    	hyperbolaMenu.add(chatAction);
-    	hyperbolaMenu.add(new Separator());
-    	hyperbolaMenu.add(exitAction);
-    	//hyperbolaMenu.add(new GroupMarker("other-actions"));
-    	//hyperbolaMenu.appendToGroup("other-actions", aboutAction);
-    	MenuManager helpMenu = new MenuManager(
-    			"&Help", "help");
-    	helpMenu.add(aboutAction);
-    	//hyperbolaMenu.add(helpMenu);
-    	menuBar.add(hyperbolaMenu);
-    	menuBar.add(helpMenu);
-    }
-    
-    @Override
-    protected void fillCoolBar(ICoolBarManager coolBar) {
-    	coolBar.setLockLayout(true);
-    	IToolBarManager toolbar = new ToolBarManager(coolBar.getStyle());
-    	coolBar.add(toolbar);
-    	toolbar.add(addContactAction);
-    	toolbar.add(new Separator());
-    	toolbar.add(chatAction);
-    }
+	@Override
+	protected void makeActions(IWorkbenchWindow window) {
+		exitAction = ActionFactory.QUIT.create(window);
+		register(exitAction);
+		aboutAction = ActionFactory.ABOUT.create(window);
+		register(aboutAction);
+		addContactAction = new AddContactAction(window);
+		register(addContactAction);
+		chatAction = new ChatAction(window);
+		register(chatAction);
+		preferencesAction = ActionFactory.PREFERENCES.create(window);
+		register(preferencesAction);
+	}
 
-    @Override
-    protected void fillStatusLine(IStatusLineManager statusLine) {
-    	statusItem = new StatusLineContributionItem("LoggedInStatus");
-    	statusItem.setText("Logged in");
-    	statusLine.add(statusItem);
-    }
+	@Override
+	protected void fillMenuBar(IMenuManager menuBar) {
+		MenuManager hyperbolaMenu = new MenuManager(
+				"&Hyperbola", "hyperbola");
+		hyperbolaMenu.add(addContactAction);
+		hyperbolaMenu.add(chatAction);
+		hyperbolaMenu.add(new Separator());
+		hyperbolaMenu.add(preferencesAction);
+		hyperbolaMenu.add(new Separator());
+		hyperbolaMenu.add(exitAction);
+		//hyperbolaMenu.add(new GroupMarker("other-actions"));
+		//hyperbolaMenu.appendToGroup("other-actions", aboutAction);
+		MenuManager helpMenu = new MenuManager(
+				"&Help", "help");
+		helpMenu.add(aboutAction);
+		//hyperbolaMenu.add(helpMenu);
+		menuBar.add(hyperbolaMenu);
+		menuBar.add(helpMenu);
+	}
+
+	@Override
+	protected void fillCoolBar(ICoolBarManager coolBar) {
+		coolBar.setLockLayout(true);
+		IToolBarManager toolbar = new ToolBarManager(coolBar.getStyle());
+		coolBar.add(toolbar);
+		toolbar.add(addContactAction);
+		toolbar.add(new Separator());
+		toolbar.add(chatAction);
+	}
+
+	@Override
+	protected void fillStatusLine(IStatusLineManager statusLine) {
+		statusItem = new StatusLineContributionItem("LoggedInStatus");
+		statusItem.setText("Logged in");
+		statusLine.add(statusItem);
+	}
 }

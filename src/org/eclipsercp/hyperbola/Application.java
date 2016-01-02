@@ -3,7 +3,8 @@ package org.eclipsercp.hyperbola;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -45,21 +46,28 @@ public class Application implements IApplication {
 	}
 
 	private boolean login(final Session session) {
+		boolean firstTry = true;
+		LoginDialog loginDialog = new LoginDialog(null);
 		while (session.getConnection() == null ||
 				!session.getConnection().isAuthenticated()) {
-			LoginDialog loginDialog = new LoginDialog(null);
-			if (loginDialog.open() != Window.OK)
-				return false;
+
+			IPreferencesService service = Platform.getPreferencesService();
+			boolean auto_login = service.getBoolean(Application.PLUGIN_ID,
+					GeneralPreferencePage.AUTO_LOGIN, true, null);
+
+			ConnectionDetails details = loginDialog.getConnectionDetails();
+
+			if (!auto_login || details == null || !firstTry) {
+				if (loginDialog.open() != Window.OK)
+					return false;
+				details = loginDialog.getConnectionDetails();
+			}
+
+			firstTry = false;
 			session.setConnectionDetails(loginDialog.getConnectionDetails());
 			connectWithProgress(session);
 		}
-		ConnectionDetails detail = new ConnectionDetails("reader", Session.HOSTNAME, "secret");
-		session.setConnectionDetails(detail);
-		try {
-			session.connectAndLogin(new NullProgressMonitor());
-		} catch (XMPPException e) {
-			e.printStackTrace();
-		}
+
 		return true;
 	}
 

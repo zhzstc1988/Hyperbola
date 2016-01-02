@@ -77,6 +77,20 @@
                value="icons/alt16.gif,icons/alt32.gif">
          </property>
       </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.eclipsercp.hyperbola.GeneralPreferencePage"
+            id="org.eclipsercp.hyperbola.preferences.general"
+            name="General">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipsercp.hyperbola.PreferenceInitializer">
+      </initializer>
    </extension>n>
 
 </plugin>

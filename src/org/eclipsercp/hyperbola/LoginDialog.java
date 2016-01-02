@@ -6,14 +6,20 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -25,6 +31,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.branding.IProductConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.hyperbola.model.ConnectionDetails;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 public class LoginDialog extends Dialog {
 
@@ -40,9 +48,17 @@ public class LoginDialog extends Dialog {
 
 	private Image[] images;
 
+	private static final String PASSWORD = "password";
+
+	private static final String SERVER = "server";
+
+	private static final String SAVED = "saved-connections";
+
+	private static final String LAST_USER = "prefs_last_connection";
+
 	public LoginDialog(Shell parent) {
 		super(parent);
-		// TODO Auto-generated constructor stub
+		loadDescriptors();
 	}
 
 	@Override
@@ -95,14 +111,45 @@ public class LoginDialog extends Dialog {
 		passwordText = new Text(composite, SWT.PASSWORD | SWT.BORDER);
 		passwordText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
+		final Button autoLogin = new Button(composite, SWT.CHECK);
+		autoLogin.setText("Login &automatically at start up");
+		autoLogin.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, true, 2, 1));
+		autoLogin.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IEclipsePreferences prefs = ConfigurationScope.INSTANCE
+						.getNode(Application.PLUGIN_ID);
+				prefs.putBoolean(GeneralPreferencePage.AUTO_LOGIN, autoLogin.getSelection());
+			}
+		});
+		IPreferencesService service = Platform.getPreferencesService();
+		boolean auto_login = service.getBoolean(Application.PLUGIN_ID, GeneralPreferencePage.AUTO_LOGIN, true, null);
+		autoLogin.setSelection(auto_login);
+
+		String lastUser = "none";
+		if (connectionDetails != null)
+			lastUser = connectionDetails.getUserId();
+		initializeUsers(lastUser);
+
 		return composite;
 	}
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		Button deleteUser = createButton(parent, IDialogConstants.CLIENT_ID,
+				"&Delete User", false);
+		deleteUser.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				savedDetails.remove(userIdText.getText());
+				initializeUsers("");
+			}
+		});
+
 		createButton(parent, IDialogConstants.OK_ID, "&Login", true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
-
 	}
 
 	@Override
@@ -123,6 +170,11 @@ public class LoginDialog extends Dialog {
 		connectionDetails = new ConnectionDetails(userIdText.getText(),
 				serverText.getText(), passwordText.getText());
 		savedDetails.put(userIdText.getText(), connectionDetails);
+
+		if (buttonId == IDialogConstants.OK_ID ||
+				buttonId == IDialogConstants.CANCEL_ID) {
+			saveDescriptors();
+		}
 
 		super.buttonPressed(buttonId);
 	}
@@ -149,7 +201,14 @@ public class LoginDialog extends Dialog {
 	}
 
 	protected void initializeUsers(String defaultUser) {
-
+		userIdText.removeAll();
+		passwordText.setText("");
+		serverText.setText("");
+		for (String text : savedDetails.keySet()) {
+			userIdText.add(text);
+		}
+		int index = Math.max(userIdText.indexOf(defaultUser), 0);
+		userIdText.select(index);
 	}
 
 	/**
@@ -166,6 +225,46 @@ public class LoginDialog extends Dialog {
 			array.add(tokens.nextToken().trim());
 
 		return array.toArray(new String[array.size()]);
+	}
+
+	private void saveDescriptors() {
+		IEclipsePreferences preferences = ConfigurationScope.INSTANCE
+				.getNode(Application.PLUGIN_ID);
+		// Upper-most preference saving, using the Last logged in user
+		preferences.put(LAST_USER, connectionDetails.getUserId());
+		Preferences connections = preferences.node(SAVED);
+		for (String name : savedDetails.keySet()) {
+			ConnectionDetails d = savedDetails.get(name);
+			Preferences connection = connections.node(name);
+			connection.put(SERVER, d.getServer());
+			connection.put(PASSWORD, d.getPassword());
+		}
+		try {
+			connections.flush();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void loadDescriptors() {
+		IEclipsePreferences preferences = ConfigurationScope.INSTANCE
+				.getNode(Application.PLUGIN_ID);
+		Preferences connections = preferences.node(SAVED);
+		try {
+			String[] userNames = connections.childrenNames();
+			for (String userName : userNames) {
+				Preferences node = connections.node(userName);
+				savedDetails.put(userName, new ConnectionDetails(
+						userName,
+						node.get(SERVER, ""),
+						node.get(PASSWORD, "")));
+			}
+			connectionDetails = savedDetails.get(preferences.get(LAST_USER, ""));
+		} catch (BackingStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	public ConnectionDetails getConnectionDetails() {
