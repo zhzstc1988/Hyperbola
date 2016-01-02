@@ -3,13 +3,19 @@ package org.eclipsercp.hyperbola;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipsercp.hyperbola.model.Session;
 import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 
 public class ContactsView extends ViewPart {
@@ -21,8 +27,9 @@ public class ContactsView extends ViewPart {
 
 	private AdapterFactory adapterFactory = new AdapterFactory();
 
+	private Action chatAction;
+
 	public ContactsView() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -53,16 +60,56 @@ public class ContactsView extends ViewPart {
 				};
 			});
 		}
+
+		makeActions();
+		hookContextMenu();
+		hookDoubleClickAction();
+	}
+
+	private void makeActions() {
+
+		chatAction = new Action() {
+			@Override
+			public void run() {
+				ITreeSelection selection = treeViewer.getStructuredSelection();
+				Object obj = selection.getFirstElement();
+				if (obj instanceof RosterEntry) {
+					ChatEditorInput input = new ChatEditorInput(((RosterEntry) obj).getUser());
+					try {
+						getSite().getWorkbenchWindow().getActivePage().openEditor(input, ChatEditor.ID);
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+	}
+
+	private void hookDoubleClickAction() {
+		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				chatAction.run();
+			}
+		});
+	}
+
+	private void hookContextMenu() {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void refresh() {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				treeViewer.refresh();
 			}
 		});
 	}
 
+	@Override
 	public void setFocus() {
 		treeViewer.getControl().setFocus();
 	}

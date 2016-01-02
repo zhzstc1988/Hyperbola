@@ -1,11 +1,17 @@
 package org.eclipsercp.hyperbola;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.IProduct;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -16,6 +22,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.branding.IProductConstants;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.hyperbola.model.ConnectionDetails;
 
 public class LoginDialog extends Dialog {
@@ -29,6 +37,8 @@ public class LoginDialog extends Dialog {
 	private ConnectionDetails connectionDetails;
 
 	private HashMap<String, ConnectionDetails> savedDetails = new HashMap<>();
+
+	private Image[] images;
 
 	public LoginDialog(Shell parent) {
 		super(parent);
@@ -117,7 +127,58 @@ public class LoginDialog extends Dialog {
 		super.buttonPressed(buttonId);
 	}
 
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Hyperbola Login");
+		IProduct product = Platform.getProduct();
+		if (product != null) {
+			String bundleId = product.getDefiningBundle().getSymbolicName();
+			String[] imageUrls = parseCSL(
+					product.getProperty(IProductConstants.WINDOW_IMAGES));
+			if (imageUrls.length > 0) {
+				images = new Image[imageUrls.length];
+				for (int i = 0; i < imageUrls.length; i++) {
+					ImageDescriptor descriptor =
+							AbstractUIPlugin.imageDescriptorFromPlugin(bundleId, imageUrls[i]);
+					images[i] = descriptor.createImage();
+				}
+				newShell.setImages(images);
+			}
+		}
+	}
+
+	protected void initializeUsers(String defaultUser) {
+
+	}
+
+	/**
+	 * @param csl The icon's path, e.g. "icons/alt16.gif,icons/alt32.gif"
+	 * @return Array of icons' paths, e.g. [icons/alt16.gif, icons/alt32.gif]
+	 */
+	private String[] parseCSL(String csl) {
+		if (csl == null)
+			return null;
+
+		StringTokenizer tokens = new StringTokenizer(csl, ","); //$NON-NLS-1$
+		ArrayList<String> array = new ArrayList<String>(10);
+		while (tokens.hasMoreTokens())
+			array.add(tokens.nextToken().trim());
+
+		return array.toArray(new String[array.size()]);
+	}
+
 	public ConnectionDetails getConnectionDetails() {
 		return connectionDetails;
+	}
+
+	@Override
+	public boolean close() {
+		if (images != null) {
+			for (int i = 0; i < images.length; i++) {
+				images[i].dispose();
+			}
+		}
+		return super.close();
 	}
 }
