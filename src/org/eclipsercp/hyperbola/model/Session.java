@@ -34,8 +34,6 @@ import org.jivesoftware.smack.packet.RosterPacket;
  * name, password, server) and the connection itself.
  */
 public class Session {
-	
-	public static final String HOSTNAME = "zhz-pc"; //$NON-NLS-1$
 
 	private ConnectionDetails connectionDetails;
 
@@ -52,8 +50,7 @@ public class Session {
 		return INSTANCE;
 	}
 
-	private Session() {
-		// enforce the singleton patter
+	protected Session() {
 	}
 
 	public XMPPConnection getConnection() {
@@ -76,8 +73,7 @@ public class Session {
 	 * Establishes the connection to the server and logs in. The connection
 	 * details must have already been set.
 	 */
-	public void connectAndLogin(final IProgressMonitor monitor)
-			throws XMPPException {
+	public void connectAndLogin(final IProgressMonitor monitor) throws XMPPException {
 		PacketListener progressPacketListener = new PacketListener() {
 			@Override
 			public void processPacket(Packet packet) {
@@ -85,12 +81,10 @@ public class Session {
 					throw new OperationCanceledException();
 				}
 				String message = null;
-				if (packet instanceof Authentication)
-				 {
+				if (packet instanceof Authentication) {
 					message = "Authenticating..."; //$NON-NLS-1$
 				}
-				if (packet instanceof RosterPacket)
-				 {
+				if (packet instanceof RosterPacket) {
 					message = "Receiving roster..."; //$NON-NLS-1$
 				}
 				if (message != null) {
@@ -105,10 +99,9 @@ public class Session {
 			connection = new XMPPConnection(connectionDetails.getServer());
 			connection.connect();
 			connection.addPacketWriterListener(progressPacketListener,
-					new OrFilter(new PacketTypeFilter(Authentication.class),
-							new PacketTypeFilter(RosterPacket.class)));
-			connection.login(connectionDetails.getUserId(), connectionDetails
-					.getPassword(), connectionDetails.getResource());
+					new OrFilter(new PacketTypeFilter(Authentication.class), new PacketTypeFilter(RosterPacket.class)));
+			connection.login(connectionDetails.getUserId(), connectionDetails.getPassword(),
+					connectionDetails.getResource());
 		} finally {
 			if (connection != null) {
 				connection.removePacketWriterListener(progressPacketListener);
