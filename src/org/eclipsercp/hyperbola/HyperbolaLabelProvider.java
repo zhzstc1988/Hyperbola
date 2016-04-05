@@ -32,15 +32,18 @@ public class HyperbolaLabelProvider extends LabelProvider {
 
 	protected final IWorkbenchAdapter getAdapter(Object element) {
 		IWorkbenchAdapter adapter = null;
-		if (element instanceof IAdaptable)
+		if (element instanceof IAdaptable) {
 			adapter = ((IAdaptable) element)
 					.getAdapter(IWorkbenchAdapter.class);
-		if (adapter == null)
+		}
+		if (adapter == null) {
 			adapter = (IWorkbenchAdapter) Platform.getAdapterManager()
 					.loadAdapter(element, IWorkbenchAdapter.class.getName());
+		}
 		return adapter;
 	}
 
+	@Override
 	public final Image getImage(Object element) {
 		IWorkbenchAdapter adapter = getAdapter(element);
 		if (adapter == null) {
@@ -58,14 +61,16 @@ public class HyperbolaLabelProvider extends LabelProvider {
 		return image;
 	}
 
+	@Override
 	public final String getText(Object element) {
 		IWorkbenchAdapter adapter = getAdapter(element);
 		if (adapter == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return adapter.getLabel(element);
 	}
 
+	@Override
 	public void dispose() {
 		if (imageTable != null) {
 			for (Iterator<Image> i = imageTable.values().iterator(); i.hasNext();) {

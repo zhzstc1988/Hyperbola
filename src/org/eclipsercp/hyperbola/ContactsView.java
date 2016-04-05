@@ -21,13 +21,13 @@ import org.jivesoftware.smack.RosterListener;
 public class ContactsView extends ViewPart {
 
 	public static final String ID =
-			"org.eclipsercp.hyperbola.views.contacts";
+			"org.eclipsercp.hyperbola.views.contacts"; //$NON-NLS-1$
 
-	private TreeViewer treeViewer;
+	TreeViewer treeViewer;
+
+	Action chatAction;
 
 	private AdapterFactory adapterFactory = new AdapterFactory();
-
-	private Action chatAction;
 
 	public ContactsView() {
 	}
@@ -96,11 +96,9 @@ public class ContactsView extends ViewPart {
 	}
 
 	private void hookContextMenu() {
-		// TODO Auto-generated method stub
-
 	}
 
-	private void refresh() {
+	void refresh() {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {

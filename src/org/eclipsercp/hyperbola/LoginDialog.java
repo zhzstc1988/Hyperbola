@@ -36,25 +36,25 @@ import org.osgi.service.prefs.Preferences;
 
 public class LoginDialog extends Dialog {
 
-	private Combo userIdText;
+	Combo userIdText;
 
-	private Text serverText;
+	Text serverText;
 
-	private Text passwordText;
+	Text passwordText;
 
 	private ConnectionDetails connectionDetails;
 
-	private HashMap<String, ConnectionDetails> savedDetails = new HashMap<>();
+	HashMap<String, ConnectionDetails> savedDetails = new HashMap<>();
 
 	private Image[] images;
 
-	private static final String PASSWORD = "password";
+	private static final String PASSWORD = "password"; //$NON-NLS-1$
 
-	private static final String SERVER = "server";
+	private static final String SERVER = "server"; //$NON-NLS-1$
 
-	private static final String SAVED = "saved-connections";
+	private static final String SAVED = "saved-connections"; //$NON-NLS-1$
 
-	private static final String LAST_USER = "prefs_last_connection";
+	private static final String LAST_USER = "prefs_last_connection"; //$NON-NLS-1$
 
 	public LoginDialog(Shell parent) {
 		super(parent);
@@ -68,12 +68,12 @@ public class LoginDialog extends Dialog {
 		composite.setLayout(layout);
 
 		Label accountLabel = new Label(composite, SWT.NONE);
-		accountLabel.setText("Account details:");
+		accountLabel.setText("Account details:"); //$NON-NLS-1$
 		accountLabel.setLayoutData(new GridData(GridData.BEGINNING,
 				GridData.CENTER, false, false, 2, 1));
 
 		Label userIdLabel = new Label(composite, SWT.NONE);
-		userIdLabel.setText("&User ID");
+		userIdLabel.setText("&User ID"); //$NON-NLS-1$
 		userIdLabel.setLayoutData(new GridData(GridData.END, GridData.CENTER,
 				false, false, 1, 1));
 
@@ -96,7 +96,7 @@ public class LoginDialog extends Dialog {
 		});
 
 		Label serverLabel = new Label(composite, SWT.NONE);
-		serverLabel.setText("&Server:");
+		serverLabel.setText("&Server:"); //$NON-NLS-1$
 		serverLabel.setLayoutData(new GridData(GridData.END, GridData.CENTER,
 				false, false));
 
@@ -105,14 +105,14 @@ public class LoginDialog extends Dialog {
 				true, false));
 
 		Label passwordLabel = new Label(composite, SWT.NONE);
-		passwordLabel.setText("&Password");
+		passwordLabel.setText("&Password"); //$NON-NLS-1$
 		passwordLabel.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 
 		passwordText = new Text(composite, SWT.PASSWORD | SWT.BORDER);
 		passwordText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 		final Button autoLogin = new Button(composite, SWT.CHECK);
-		autoLogin.setText("Login &automatically at start up");
+		autoLogin.setText("Login &automatically at start up"); //$NON-NLS-1$
 		autoLogin.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, true, 2, 1));
 		autoLogin.addSelectionListener(new SelectionAdapter() {
 
@@ -127,9 +127,10 @@ public class LoginDialog extends Dialog {
 		boolean auto_login = service.getBoolean(Application.PLUGIN_ID, GeneralPreferencePage.AUTO_LOGIN, true, null);
 		autoLogin.setSelection(auto_login);
 
-		String lastUser = "none";
-		if (connectionDetails != null)
+		String lastUser = "none"; //$NON-NLS-1$
+		if (connectionDetails != null) {
 			lastUser = connectionDetails.getUserId();
+		}
 		initializeUsers(lastUser);
 
 		return composite;
@@ -138,28 +139,28 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		Button deleteUser = createButton(parent, IDialogConstants.CLIENT_ID,
-				"&Delete User", false);
+				"&Delete User", false); //$NON-NLS-1$
 		deleteUser.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				savedDetails.remove(userIdText.getText());
-				initializeUsers("");
+				initializeUsers(""); //$NON-NLS-1$
 			}
 		});
 
-		createButton(parent, IDialogConstants.OK_ID, "&Login", true);
+		createButton(parent, IDialogConstants.OK_ID, "&Login", true); //$NON-NLS-1$
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	@Override
 	protected void okPressed() {
 		if (connectionDetails.getUserId().isEmpty()) {
-			MessageDialog.openError(getShell(), "Invalid User ID", "User ID field must not be emply.");
+			MessageDialog.openError(getShell(), "Invalid User ID", "User ID field must not be emply."); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 		if (connectionDetails.getServer().isEmpty()) {
-			MessageDialog.openError(getShell(), "Invalid Server", "Server field must not be emply.");
+			MessageDialog.openError(getShell(), "Invalid Server", "Server field must not be emply."); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 		super.okPressed();
@@ -182,7 +183,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Hyperbola Login");
+		newShell.setText("Hyperbola Login"); //$NON-NLS-1$
 		IProduct product = Platform.getProduct();
 		if (product != null) {
 			String bundleId = product.getDefiningBundle().getSymbolicName();
@@ -202,8 +203,8 @@ public class LoginDialog extends Dialog {
 
 	protected void initializeUsers(String defaultUser) {
 		userIdText.removeAll();
-		passwordText.setText("");
-		serverText.setText("");
+		passwordText.setText(""); //$NON-NLS-1$
+		serverText.setText(""); //$NON-NLS-1$
 		for (String text : savedDetails.keySet()) {
 			userIdText.add(text);
 		}
@@ -216,13 +217,15 @@ public class LoginDialog extends Dialog {
 	 * @return Array of icons' paths, e.g. [icons/alt16.gif, icons/alt32.gif]
 	 */
 	private String[] parseCSL(String csl) {
-		if (csl == null)
+		if (csl == null) {
 			return null;
+		}
 
 		StringTokenizer tokens = new StringTokenizer(csl, ","); //$NON-NLS-1$
 		ArrayList<String> array = new ArrayList<String>(10);
-		while (tokens.hasMoreTokens())
+		while (tokens.hasMoreTokens()) {
 			array.add(tokens.nextToken().trim());
+		}
 
 		return array.toArray(new String[array.size()]);
 	}
@@ -256,12 +259,11 @@ public class LoginDialog extends Dialog {
 				Preferences node = connections.node(userName);
 				savedDetails.put(userName, new ConnectionDetails(
 						userName,
-						node.get(SERVER, ""),
-						node.get(PASSWORD, "")));
+						node.get(SERVER, ""), //$NON-NLS-1$
+						node.get(PASSWORD, ""))); //$NON-NLS-1$
 			}
-			connectionDetails = savedDetails.get(preferences.get(LAST_USER, ""));
+			connectionDetails = savedDetails.get(preferences.get(LAST_USER, "")); //$NON-NLS-1$
 		} catch (BackingStoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

@@ -32,15 +32,17 @@ import org.jivesoftware.smack.packet.Presence;
 public class AdapterFactory implements IAdapterFactory {
 
 	private IWorkbenchAdapter groupAdapter = new IWorkbenchAdapter() {
+		@Override
 		public Object getParent(Object o) {
 			return Session.getInstance().getConnection().getRoster();
 		}
 
+		@Override
 		public String getLabel(Object o) {
 			RosterGroup group = ((RosterGroup) o);
 			int available = getNumAvailable(group);
-			return group.getName() + " (" + available + "/"
-					+ group.getEntryCount() + ")";			
+			return group.getName() + " (" + available + "/" //$NON-NLS-1$ //$NON-NLS-2$
+					+ group.getEntryCount() + ")";			 //$NON-NLS-1$
 		}
 		
 		private int getNumAvailable(RosterGroup group) {
@@ -49,17 +51,20 @@ public class AdapterFactory implements IAdapterFactory {
 				RosterEntry entry = i.next();
 				Presence presence = getPresence(entry);
 				if (presence != null
-						&& presence.getMode() != Presence.Mode.xa)
+						&& presence.getMode() != Presence.Mode.xa) {
 					available++;
+				}
 			}
 			return available;
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor(Object object) {
 			return AbstractUIPlugin.imageDescriptorFromPlugin(
 					Application.PLUGIN_ID, IImageKeys.GROUP);
 		}
 
+		@Override
 		public Object[] getChildren(Object o) {
 			RosterGroup group = (RosterGroup) o;
 			List<Object> result = new ArrayList<>();
@@ -69,15 +74,18 @@ public class AdapterFactory implements IAdapterFactory {
 	};
 
 	private IWorkbenchAdapter entryAdapter = new IWorkbenchAdapter() {
+		@Override
 		public Object getParent(Object o) {
 			return null;
 		}
 
+		@Override
 		public String getLabel(Object o) {
 			RosterEntry entry = ((RosterEntry) o);
-			return entry.getName() + " (" + entry.getUser() + ")";
+			return entry.getName() + " (" + entry.getUser() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor(Object object) {
 			RosterEntry entry = ((RosterEntry) object);
 			String key = presenceToKey(getPresence(entry));
@@ -85,24 +93,29 @@ public class AdapterFactory implements IAdapterFactory {
 					Application.PLUGIN_ID, key);
 		}
 
+		@Override
 		public Object[] getChildren(Object o) {
 			return new Object[0];
 		}				
 	};
 	
 	private IWorkbenchAdapter rosterAdapter = new IWorkbenchAdapter() {
+		@Override
 		public Object getParent(Object o) {
 			return null;
 		}
 
+		@Override
 		public String getLabel(Object o) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor(Object object) {
 			return null;
 		}
 
+		@Override
 		public Object[] getChildren(Object o) {
 			Roster roster = (Roster) o;
 			List<Object> result = new ArrayList<>();
@@ -112,27 +125,33 @@ public class AdapterFactory implements IAdapterFactory {
 		}			
 	};
 
-	private String presenceToKey(Presence p) {
+	String presenceToKey(Presence p) {
 		Presence.Mode presence = p != null ? p.getMode() : null;
-		if (presence == Presence.Mode.available)
+		if (presence == Presence.Mode.available) {
 			return IImageKeys.ONLINE;
-		if (presence == Presence.Mode.chat)
+		}
+		if (presence == Presence.Mode.chat) {
 			return IImageKeys.ONLINE;
-		if (presence == Presence.Mode.away)
+		}
+		if (presence == Presence.Mode.away) {
 			return IImageKeys.AWAY;
-		if (presence == Presence.Mode.xa)
+		}
+		if (presence == Presence.Mode.xa) {
 			return IImageKeys.AWAY;
-		if (presence == Presence.Mode.dnd)
+		}
+		if (presence == Presence.Mode.dnd) {
 			return IImageKeys.DO_NOT_DISTURB;
+		}
 		return IImageKeys.OFFLINE;
 	}
 	
-	private void collect(Iterator<? extends Object> itr, List<Object> list) {
-		while (itr.hasNext())
+	void collect(Iterator<? extends Object> itr, List<Object> list) {
+		while (itr.hasNext()) {
 			list.add(itr.next());
+		}
 	}
 	
-	private Presence getPresence(RosterEntry entry) {
+	Presence getPresence(RosterEntry entry) {
 		return Session.getInstance().getConnection().getRoster()
 				.getPresence(entry.getUser());
 	}
@@ -141,17 +160,21 @@ public class AdapterFactory implements IAdapterFactory {
 	@Override
 	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adapterType == IWorkbenchAdapter.class
-				&& adaptableObject instanceof RosterGroup)
+				&& adaptableObject instanceof RosterGroup) {
 			return (T) groupAdapter;
+		}
 		if (adapterType == IWorkbenchAdapter.class
-				&& adaptableObject instanceof RosterEntry)
+				&& adaptableObject instanceof RosterEntry) {
 			return (T) entryAdapter;
+		}
 		if (adapterType == IWorkbenchAdapter.class
-				&& adaptableObject instanceof Roster)
+				&& adaptableObject instanceof Roster) {
 			return (T) rosterAdapter;
+		}
 		return null;
 	}
 
+	@Override
 	public Class<?>[] getAdapterList() {
 		return new Class[] { IWorkbenchAdapter.class };
 	}

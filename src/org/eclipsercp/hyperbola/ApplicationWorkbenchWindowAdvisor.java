@@ -39,7 +39,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowStatusLine(true);
 		configurer.setShowProgressIndicator(false);
 		configurer.setShowPerspectiveBar(false);
-		//configurer.setTitle("Hyperbola"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -49,16 +48,19 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				IImageKeys.ONLINE).createImage();
 		IStatusLineManager statusline = getWindowConfigurer().
 				getActionBarConfigurer().getStatusLineManager();
-		statusline.setMessage(statusImage, "Online");
+		statusline.setMessage(statusImage, "Online"); //$NON-NLS-1$
 	}
 
 	@Override
 	public void dispose() {
-		if(statusImage != null)
+		if(statusImage != null) {
 			statusImage.dispose();
-		if(trayImage != null)
+		}
+		if(trayImage != null) {
 			trayImage.dispose();
-		if(trayItem != null)
+		}
+		if(trayItem != null) {
 			trayItem.dispose();
+		}
 	}
 }

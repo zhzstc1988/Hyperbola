@@ -49,7 +49,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	@Override
 	protected void fillMenuBar(IMenuManager menuBar) {
 		MenuManager hyperbolaMenu = new MenuManager(
-				"&Hyperbola", "hyperbola");
+				"&Hyperbola", "hyperbola"); //$NON-NLS-1$ //$NON-NLS-2$
 		hyperbolaMenu.add(addContactAction);
 		hyperbolaMenu.add(chatAction);
 		hyperbolaMenu.add(new Separator());
@@ -59,7 +59,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		//hyperbolaMenu.add(new GroupMarker("other-actions"));
 		//hyperbolaMenu.appendToGroup("other-actions", aboutAction);
 		MenuManager helpMenu = new MenuManager(
-				"&Help", "help");
+				"&Help", "help"); //$NON-NLS-1$ //$NON-NLS-2$
 		helpMenu.add(aboutAction);
 		//hyperbolaMenu.add(helpMenu);
 		menuBar.add(hyperbolaMenu);
@@ -78,8 +78,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	@Override
 	protected void fillStatusLine(IStatusLineManager statusLine) {
-		statusItem = new StatusLineContributionItem("LoggedInStatus");
-		statusItem.setText("Logged in");
+		statusItem = new StatusLineContributionItem("LoggedInStatus"); //$NON-NLS-1$
+		statusItem.setText("Logged in"); //$NON-NLS-1$
 		statusLine.add(statusItem);
 	}
 }

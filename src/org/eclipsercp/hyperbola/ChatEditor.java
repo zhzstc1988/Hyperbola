@@ -20,31 +20,25 @@ import org.jivesoftware.smack.packet.Message;
 
 public class ChatEditor extends EditorPart {
 
-	public static String ID = "org.eclipsercp.hyperbola.editors.chat";
-	private Text transcript;
+	public static String ID = "org.eclipsercp.hyperbola.editors.chat"; //$NON-NLS-1$
+	Text transcript;
 	private Text entry;
 	private Chat chat;
 	private MessageListener messageListener;
 
 	public ChatEditor() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		// TODO Auto-generated method stub
 		setSite(site);
 		setInput(input);
 		setPartName(getParticipant());
@@ -52,19 +46,16 @@ public class ChatEditor extends EditorPart {
 
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-		// TODO Auto-generated method stub
 		Composite top = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -89,7 +80,6 @@ public class ChatEditor extends EditorPart {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
 				if (e.character == SWT.CR) {
 					sendMessage();
 					e.doit = false;
@@ -99,6 +89,7 @@ public class ChatEditor extends EditorPart {
 
 		messageListener = new MessageListener() {
 
+			@Override
 			public void processMessage(Chat chat, Message message) {
 				process(message);
 			}
@@ -109,8 +100,6 @@ public class ChatEditor extends EditorPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -129,7 +118,7 @@ public class ChatEditor extends EditorPart {
 		return Session.getInstance();
 	}
 
-	private void sendMessage() {
+	void sendMessage() {
 		String body = entry.getText();
 		if (body.length() == 0) {
 			return;
@@ -140,24 +129,26 @@ public class ChatEditor extends EditorPart {
 			e.printStackTrace();
 		}
 		transcript.append(renderMessage(getUser(), body));
-		transcript.append("\n");
+		transcript.append("\n"); //$NON-NLS-1$
 		scrollToEnd();
-		entry.setText("");		
+		entry.setText("");		 //$NON-NLS-1$
 	}
 
-	private void scrollToEnd() {
+	void scrollToEnd() {
 		int n = transcript.getCharCount();
 		transcript.setSelection(n, n);
 		transcript.showSelection();
 	}
 
-	private String renderMessage(String from, String body) {
-		if (from == null)
+	String renderMessage(String from, String body) {
+		if (from == null) {
 			return body;
+		}
 		int j = from.indexOf('@');
-		if (j > 0)
+		if (j > 0) {
 			from = from.substring(0, j);
-		return "<" + from + ">  " + body;
+		}
+		return "<" + from + ">  " + body; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private String getUser() {
@@ -179,19 +170,20 @@ public class ChatEditor extends EditorPart {
 		process(message);
 	}
 
-	private void process(Message message) {
-		if (transcript.isDisposed()) 
+	void process(Message message) {
+		if (transcript.isDisposed()) {
 			return;
+		}
 		transcript.getDisplay().asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				if (transcript.isDisposed())
+				if (transcript.isDisposed()) {
 					return;
+				}
 				transcript.append(renderMessage(message.getFrom(),
 						message.getBody()));
-				transcript.append("\n");
+				transcript.append("\n"); //$NON-NLS-1$
 				scrollToEnd();
 			}
 		});

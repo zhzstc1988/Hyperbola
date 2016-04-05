@@ -62,7 +62,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		}
 	}
 
-	private void startChat(Message message) {
+	void startChat(Message message) {
 		String user = StringUtils.parseBareAddress(message.getFrom());
 		Chat chat = Session.getInstance().getChat(user, false);
 		if (chat != null) {
@@ -74,13 +74,14 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 			
 			@Override
 			public void run() {
-				if (PlatformUI.isWorkbenchRunning())
+				if (PlatformUI.isWorkbenchRunning()) {
 					openChatEditor(message);
+				}
 			}
 		});
 	}
 
-	private void openChatEditor(Message message) {
+	void openChatEditor(Message message) {
 		IWorkbench workbench = getWorkbenchConfigurer().getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		IWorkbenchPage page = window.getActivePage();

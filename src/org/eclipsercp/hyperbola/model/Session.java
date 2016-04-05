@@ -35,7 +35,7 @@ import org.jivesoftware.smack.packet.RosterPacket;
  */
 public class Session {
 	
-	public static final String HOSTNAME = "zhz-pc";
+	public static final String HOSTNAME = "zhz-pc"; //$NON-NLS-1$
 
 	private ConnectionDetails connectionDetails;
 
@@ -46,8 +46,9 @@ public class Session {
 	private static Session INSTANCE;
 
 	public static Session getInstance() {
-		if (INSTANCE == null)
+		if (INSTANCE == null) {
 			INSTANCE = new Session();
+		}
 		return INSTANCE;
 	}
 
@@ -78,22 +79,29 @@ public class Session {
 	public void connectAndLogin(final IProgressMonitor monitor)
 			throws XMPPException {
 		PacketListener progressPacketListener = new PacketListener() {
+			@Override
 			public void processPacket(Packet packet) {
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 				String message = null;
 				if (packet instanceof Authentication)
-					message = "Authenticating...";
+				 {
+					message = "Authenticating..."; //$NON-NLS-1$
+				}
 				if (packet instanceof RosterPacket)
-					message = "Receiving roster...";
-				if (message != null)
+				 {
+					message = "Receiving roster..."; //$NON-NLS-1$
+				}
+				if (message != null) {
 					monitor.subTask(message);
+				}
 			}
 		};
 		try {
-			monitor.beginTask("Connecting...", IProgressMonitor.UNKNOWN);
-			monitor.subTask("Contacting " + connectionDetails.getServer()
-					+ "...");
+			monitor.beginTask("Connecting...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+			monitor.subTask("Contacting " + connectionDetails.getServer() //$NON-NLS-1$
+					+ "..."); //$NON-NLS-1$
 			connection = new XMPPConnection(connectionDetails.getServer());
 			connection.connect();
 			connection.addPacketWriterListener(progressPacketListener,
@@ -102,8 +110,9 @@ public class Session {
 			connection.login(connectionDetails.getUserId(), connectionDetails
 					.getPassword(), connectionDetails.getResource());
 		} finally {
-			if (connection != null)
+			if (connection != null) {
 				connection.removePacketWriterListener(progressPacketListener);
+			}
 			monitor.done();
 		}
 	}

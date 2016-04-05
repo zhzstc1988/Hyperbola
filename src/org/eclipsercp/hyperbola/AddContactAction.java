@@ -18,14 +18,14 @@ public class AddContactAction extends Action implements ISelectionListener, IWor
 
 	private final IWorkbenchWindow window;
 	public final static String ID =
-			"org.eclipsercp.hyperbola.addContact";
+			"org.eclipsercp.hyperbola.addContact"; //$NON-NLS-1$
 	private IStructuredSelection selection;
 
 	public AddContactAction(IWorkbenchWindow iwindow) {
 		this.window = iwindow;
 		setId(ID);
-		setText("&Add Contact...");
-		setToolTipText("Add a contact to your contacts list.");
+		setText("&Add Contact..."); //$NON-NLS-1$
+		setToolTipText("Add a contact to your contacts list."); //$NON-NLS-1$
 		setImageDescriptor(
 				AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, IImageKeys.ADD_CONTACT));
 		window.getSelectionService().addSelectionListener(this);
@@ -38,7 +38,7 @@ public class AddContactAction extends Action implements ISelectionListener, IWor
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection iselection) {
-		if (part instanceof ContactsView)
+		if (part instanceof ContactsView) {
 			if (iselection instanceof IStructuredSelection) {
 				selection = (IStructuredSelection) iselection;
 				setEnabled(selection.size() == 1 &&
@@ -46,6 +46,7 @@ public class AddContactAction extends Action implements ISelectionListener, IWor
 			} else {
 				setEnabled(false);
 			}
+		}
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class AddContactAction extends Action implements ISelectionListener, IWor
 			Object item = selection.getFirstElement();
 			RosterGroup group = (RosterGroup) item;
 			Roster list = Session.getInstance().getConnection().getRoster();
-			String user = d.getUserId() + "@" + d.getServer();
+			String user = d.getUserId() + "@" + d.getServer(); //$NON-NLS-1$
 			String[] groups = new String[] { group.getName() };
 			try {
 				list.createEntry(user, d.getNickname(), groups);

@@ -51,7 +51,7 @@ public class AddContactDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Add Contact");
+		newShell.setText("Add Contact"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class AddContactDialog extends Dialog {
 		composite.setLayout(layout);
 
 		Label userIdLabel = new Label(composite, SWT.NONE);
-		userIdLabel.setText("&User id:");
+		userIdLabel.setText("&User id:"); //$NON-NLS-1$
 		userIdLabel.setLayoutData(new GridData(GridData.END, GridData.CENTER,
 				false, false));
 
@@ -70,7 +70,7 @@ public class AddContactDialog extends Dialog {
 				true, false));
 
 		Label serverLabel = new Label(composite, SWT.NONE);
-		serverLabel.setText("&Server:");
+		serverLabel.setText("&Server:"); //$NON-NLS-1$
 		serverLabel.setLayoutData(new GridData(GridData.END, GridData.CENTER,
 				false, false));
 
@@ -79,7 +79,7 @@ public class AddContactDialog extends Dialog {
 				true, false));
 
 		Label nicknameLabel = new Label(composite, SWT.NONE);
-		nicknameLabel.setText("&Nickname:");
+		nicknameLabel.setText("&Nickname:"); //$NON-NLS-1$
 		nicknameLabel.setLayoutData(new GridData(GridData.END, GridData.CENTER,
 				false, false));
 
@@ -98,19 +98,19 @@ public class AddContactDialog extends Dialog {
 		server = serverText.getText();
 		userId = userIdText.getText();
 
-		if (nickname.equals("")) {
-			MessageDialog.openError(getShell(), "Invalid Nickname",
-					"Nickname field must not be blank.");
+		if (nickname.equals("")) { //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Invalid Nickname", //$NON-NLS-1$
+					"Nickname field must not be blank."); //$NON-NLS-1$
 			return;
 		}
-		if (server.equals("")) {
-			MessageDialog.openError(getShell(), "Invalid Server",
-					"Server field must not be blank.");
+		if (server.equals("")) { //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Invalid Server", //$NON-NLS-1$
+					"Server field must not be blank."); //$NON-NLS-1$
 			return;
 		}
-		if (userId.equals("")) {
-			MessageDialog.openError(getShell(), "Invalid User id",
-					"User id field must not be blank.");
+		if (userId.equals("")) { //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Invalid User id", //$NON-NLS-1$
+					"User id field must not be blank."); //$NON-NLS-1$
 			return;
 		}
 

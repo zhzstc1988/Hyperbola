@@ -13,7 +13,7 @@ import org.jivesoftware.smack.RosterEntry;
 
 public class ChatAction extends Action implements ISelectionListener, IWorkbenchAction {
 
-	public final static String ID = "org.eclipsrcp.hyperbola.chat";
+	public final static String ID = "org.eclipsrcp.hyperbola.chat"; //$NON-NLS-1$
 
 	private final IWorkbenchWindow window;
 	private IStructuredSelection selection;
@@ -21,8 +21,8 @@ public class ChatAction extends Action implements ISelectionListener, IWorkbench
 	public ChatAction(IWorkbenchWindow window) {
 		this.window = window;
 		setId(ID);
-		setText("&Chat");
-		setToolTipText("Chat with the selected Contact.");
+		setText("&Chat"); //$NON-NLS-1$
+		setToolTipText("Chat with the selected Contact."); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 				Application.PLUGIN_ID, IImageKeys.CHAT));
 		this.window.getSelectionService().addSelectionListener(this);
