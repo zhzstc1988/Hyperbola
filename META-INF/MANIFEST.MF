@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.eclipsercp.hyperbola;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
- org.jivesoftware.smack
+ org.jivesoftware.smack,
+ org.eclipse.ui.console;bundle-version="3.6.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy

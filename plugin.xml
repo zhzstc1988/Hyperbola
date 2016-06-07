@@ -14,9 +14,16 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Hyperbola Perspective"
             class="org.eclipsercp.hyperbola.Perspective"
-            id="org.eclipsercp.hyperbola.perspective">
+            icon="icons/chat.gif"
+            id="org.eclipsercp.hyperbola.perspective"
+            name="Hyperbola Perspective">
+      </perspective>
+      <perspective
+            class="org.eclipsercp.hyperbola.PerspectiveDebug"
+            icon="icons/dtdfile.gif"
+            id="org.eclipsercp.hyperbola.debugperspective"
+            name="Debug">
       </perspective>
    </extension>
    <extension
@@ -76,6 +83,10 @@
                name="windowImages"
                value="icons/alt16.gif,icons/alt32.gif">
          </property>
+         <property
+               name="preferenceCustomization"
+               value="preferences.ini">
+         </property>
       </product>
    </extension>
    <extension
@@ -117,21 +128,26 @@
       <key
             commandId="org.eclipsercp.hyperbola.addContact"
             contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            schemeId="org.eclipsercp.hyperbola.keyConfig"
             sequence="M1+A">
       </key>
       <key
             commandId="org.eclipsrcp.hyperbola.chat"
             contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            schemeId="org.eclipsercp.hyperbola.keyConfig"
             sequence="M1+U">
       </key>
       <key
             commandId="org.eclipse.ui.file.exit"
             contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            schemeId="org.eclipsercp.hyperbola.keyConfig"
             sequence="M1+Q">
       </key>
+      <scheme
+            description="Keys for Hyperbola"
+            id="org.eclipsercp.hyperbola.keyConfig"
+            name="Hyperbola Keys">
+      </scheme>
    </extension>n>
 
 </plugin>

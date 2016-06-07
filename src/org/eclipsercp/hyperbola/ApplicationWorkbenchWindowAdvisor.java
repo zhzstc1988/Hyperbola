@@ -38,7 +38,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
 		configurer.setShowProgressIndicator(false);
-		configurer.setShowPerspectiveBar(false);
+		configurer.setShowPerspectiveBar(true);
 	}
 
 	@Override

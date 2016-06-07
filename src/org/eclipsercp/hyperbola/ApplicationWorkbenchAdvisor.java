@@ -10,6 +10,8 @@ import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
 import org.eclipsercp.hyperbola.model.Session;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.PacketListener;
@@ -33,12 +35,14 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	public String getInitialWindowPerspectiveId() {
 		return PERSPECTIVE_ID;
 	}
-	
+
 	@Override
 	public void initialize(IWorkbenchConfigurer configurer) {
 		configurer.setSaveAndRestore(true);
+		ConsolePlugin.getDefault().getConsoleManager().addConsoles(
+				new IConsole[] { new DebugConsole() });
 	}
-	
+
 	@Override
 	public void preStartup() {
 		hookIncomingChatListener();
@@ -48,7 +52,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		XMPPConnection connection = Session.getInstance().getConnection();
 		if (connection != null) {
 			PacketListener listener = new PacketListener() {
-				
+
 				@Override
 				public void processPacket(Packet packet) {
 					Message message = (Message) packet;
@@ -68,10 +72,10 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		if (chat != null) {
 			return;
 		}
-		
+
 		IWorkbench workbench = getWorkbenchConfigurer().getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				if (PlatformUI.isWorkbenchRunning()) {
