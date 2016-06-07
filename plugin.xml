@@ -91,6 +91,47 @@
       <initializer
             class="org.eclipsercp.hyperbola.PreferenceInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            description="Hyperbola Commands"
+            id="org.eclipsercp.hyperbola.commands"
+            name="Hyperbola">
+      </category>
+      <command
+            categoryId="org.eclipsercp.hyperbola.commands"
+            description="Add a contact to thte selected contact group"
+            id="org.eclipsercp.hyperbola.addContact"
+            name="Add Contact">
+      </command>
+      <command
+            categoryId="org.eclipsercp.hyperbola.commands"
+            description="Start chatting"
+            id="org.eclipsrcp.hyperbola.chat"
+            name="Chat">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipsercp.hyperbola.addContact"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+A">
+      </key>
+      <key
+            commandId="org.eclipsrcp.hyperbola.chat"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+U">
+      </key>
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Q">
+      </key>
    </extension>n>
 
 </plugin>

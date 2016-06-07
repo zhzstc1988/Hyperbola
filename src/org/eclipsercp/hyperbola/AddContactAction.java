@@ -24,6 +24,7 @@ public class AddContactAction extends Action implements ISelectionListener, IWor
 	public AddContactAction(IWorkbenchWindow iwindow) {
 		this.window = iwindow;
 		setId(ID);
+		setActionDefinitionId(ID);	// This is the Command ID, which accidentally is the same as Action ID
 		setText("&Add Contact..."); //$NON-NLS-1$
 		setToolTipText("Add a contact to your contacts list."); //$NON-NLS-1$
 		setImageDescriptor(

@@ -15,7 +15,7 @@
 package org.eclipsercp.hyperbola;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
@@ -26,9 +26,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	@Override
 	public void initializeDefaultPreferences() {
-		@SuppressWarnings("deprecation")
-		IEclipsePreferences defaults = new DefaultScope()
-				.getNode(Application.PLUGIN_ID);
+		IEclipsePreferences defaults = ConfigurationScope.INSTANCE.getNode(Application.PLUGIN_ID);
 		defaults.putBoolean(GeneralPreferencePage.AUTO_LOGIN, false);
 	}
 }

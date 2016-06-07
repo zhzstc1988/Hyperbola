@@ -35,6 +35,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	@Override
 	protected void makeActions(IWorkbenchWindow window) {
 		exitAction = ActionFactory.QUIT.create(window);
+		exitAction.setActionDefinitionId("org.eclipse.ui.file.exit");
 		register(exitAction);
 		aboutAction = ActionFactory.ABOUT.create(window);
 		register(aboutAction);
@@ -82,4 +83,5 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		statusItem.setText("Logged in"); //$NON-NLS-1$
 		statusLine.add(statusItem);
 	}
+	
 }
