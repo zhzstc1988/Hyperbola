@@ -6,6 +6,8 @@ import org.eclipse.ui.console.IConsoleConstants;
 
 public class PerspectiveDebug implements IPerspectiveFactory {
 
+	public static final String ID = "org.eclipsercp.hyperbola.debugperspective"; //$NON-NLS-1$
+
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.addStandaloneView(ContactsView.ID, false,

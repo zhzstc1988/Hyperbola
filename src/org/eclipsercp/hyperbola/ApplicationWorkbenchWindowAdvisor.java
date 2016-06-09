@@ -8,6 +8,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.part.EditorInputTransfer;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
@@ -39,6 +40,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowStatusLine(true);
 		configurer.setShowProgressIndicator(false);
 		configurer.setShowPerspectiveBar(true);
+		configurer.addEditorAreaTransfer(EditorInputTransfer.getInstance());
+		configurer.configureEditorAreaDropListener(new EditorAreaDropAdapter(configurer.getWindow()));
 	}
 
 	@Override

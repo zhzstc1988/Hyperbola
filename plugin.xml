@@ -148,6 +148,13 @@
             id="org.eclipsercp.hyperbola.keyConfig"
             name="Hyperbola Keys">
       </scheme>
+   </extension>
+   <extension
+         point="org.eclipse.ui.elementFactories">
+      <factory
+            class="org.eclipsercp.hyperbola.ChatEditorInputFactory"
+            id="org.eclipsercp.hyperbola.chatinput">
+      </factory>
    </extension>n>
 
 </plugin>
